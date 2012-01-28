@@ -22,7 +22,11 @@ PS. It has nothing to do with the
 
 ## Features:
 
-* Quickly jump between tests for fast viewing and editing.
+Quickly:
+
+* jump between {specs,tests} for fast viewing and editing.
+* run {specs,tests} files.
+* run {specs,tests} methods.
 
 ## Installation:
 
@@ -43,7 +47,7 @@ $PATH. Something like this:
 ### .env.rc
     
 If you would like to define $ENV specific setting to your project you
-could add them to an `.env.rc` file in your project root directroy.
+could add them to an `.env.rc` file in your project root directory.
 
 ### .togglerc
 
