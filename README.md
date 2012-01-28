@@ -72,21 +72,19 @@ Finally:
 
 or for true TDD:
 
-    (add-hook 'ruby-mode-hook
-              '(lambda ()
-                 (testr-mode)))
+    (add-hook 'ruby-mode-hook '(lambda () (testr-mode)))
 
 ## Usage
 
 ### Key binding:
 
-* M-t     => 'testr-toggle-buffer
-* C-c tf  => 'testr-run-test-file
-* C-c tm  => 'testr-run-test-method
-* C-c sf  => 'testr-run-spec-file
-* C-c sm  => 'testr-run-spec-method
-* C-c rr  => 'testr-run-last-test-or-spec-file
-* C-c rm  => 'testr-run-last-test-or-spec-method
+* M-t     => `testr-toggle-buffer`
+* C-c tf  => `testr-run-test-file`
+* C-c tm  => `testr-run-test-method`
+* C-c sf  => `testr-run-spec-file`
+* C-c sm  => `testr-run-spec-method`
+* C-c rr  => `testr-run-last-test-or-spec-file`
+* C-c rm  => `testr-run-last-test-or-spec-method`
 
 ### Complete list of functions:
 
