@@ -22,7 +22,7 @@ PS. It has nothing to do with the
 
 ## Features:
 
-Quickly:
+Quickly
 
 * jump between {specs,tests} for fast viewing and editing.
 * run {specs,tests} files.
@@ -37,21 +37,20 @@ In your emacs config:
 
 ### noansi
 
-By default it will clear out ansi characters with the executable
-`bin/noansi` ruby script. So, you should put it somewhere in your
-$PATH. Something like this:
+By default it will remove non-ansi characters with the `bin/noansi`
+ruby script. So, you should put it somewhere in your $PATH. 
 
     $ cd testr
     $ cp bin/noansi ~/bin # if ~/bin is in your $PATH
 
 ### .env.rc
     
-If you would like to define $ENV specific setting to your project you
-could add them to an `.env.rc` file in your project root directory.
+If you would like to define $ENV specific setting for your project you
+could add them to an `.env.rc` file in your project's root directory.
 
 ### .togglerc
 
-If you want to use the toggling functionality you should add a
+If you want to use the toggling functionality, you should add a
 `.togglerc` file to your project's root directory.
 
 Example -- Set the style only:
