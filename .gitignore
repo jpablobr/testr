@@ -1,0 +1,10 @@
+## EMACS
+*~
+\#*
+.\#*
+*.elc
+
+## VIM
+*.swp
+
+## PROJECT::SPECIFIC'
