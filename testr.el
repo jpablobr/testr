@@ -151,9 +151,7 @@
   "Define the command line needed to run the given command and arguments."
   (let ((proj-env (testr-project-env-file default-directory))
         (command  (mapconcat (lambda (x) x) args " ")))
-    (if proj-env
-        (concat ". " proj-env "; " command testr-noansi-option)
-      (concat command testr-noansi-option))))
+    (concat command testr-noansi-option)))
 
 (defun testr-start-process (&rest args)
   "Start the test process using the compilation package."
@@ -214,15 +212,9 @@
         ((file-exists-p (car files)) (car files))
         (t (testr-find-existing-file (cdr files)))))
 
-(defun testr-spec-command (buffer)
-  "Return the name of the appropriate spec command to run for the given buffer."
-  (let* ((default-directory (testr-find-project-top (buffer-file-name buffer))))
-    (or (msg (concat "---: '" (getenv "HOME") "' ---"))
-        (getenv "RSPEC_CMD")
-        (testr-find-existing-file
-         (list (concat default-directory "script/spec")
-               (concat default-directory "vendor/plugins/rspec/bin/spec")))
-        "$SPEC_COMMAND")))
+(defun testr-spec-command ()
+  "Return the name of the appropriate spec command."
+  "bundle exec rspec --drb" )
 
 (defun testr-find-spec-name ()
   "Return the name of the current test method."
@@ -230,15 +222,6 @@
     (forward-line)
     (re-search-backward "^ *it +['\"]\\([^\"]*\\)['\"] +do")
     (buffer-substring (match-beginning 1) (match-end 1))))
-
-(defun testr-take-down-test-buffer ()
-  "If the test buffer is in the front, take it down.
-Make an attempt to get back to the last buffer that was used in a
-test."
-  (if (string-equal testr-buffer-name (buffer-name))
-      (progn
-        (kill-buffer testr-buffer-name)
-        (if testr-last-test-buffer (pop-to-buffer testr-last-test-buffer)) )))
 
 (defun testr-deal-with-mode-line ()
   "Remove the mode line if so configured.
@@ -315,13 +298,12 @@ a toggle mapping for this file, then run the test on the toggled
 test file."
   (interactive "P")
   (bookmark-set "test")
-  (testr-take-down-test-buffer)
   (let* ((file-name (buffer-file-name))
          (default-directory (testr-find-project-top file-name))
          (test-buffer (current-buffer)) )
     (if (not (testr-spec-file-name-p file-name))
         (progn
-          (testr-toggle-buffer)
+          ;; (testr-toggle-buffer)
           (setq file-name (buffer-file-name)) ))
     (save-buffer)
     (setq testr-last-test-buffer (buffer-name))
@@ -330,7 +312,7 @@ test file."
             ((null arg)
              (testr-prep-test-buffer)
              (testr-start-process
-              (testr-spec-command test-buffer) testr-spec-options
+              (testr-spec-command) testr-spec-options
               (concat file-name ":" line-number))
              (testr-insert-headers
               testr-buffer-name
@@ -349,7 +331,6 @@ If this file name does not include the string 'spec' and there is
 a toggle mapping for this file, then run the test on the toggled
 test file."
   (interactive "P")
-  (testr-take-down-test-buffer)
   (if (string-equal testr-buffer-name (buffer-name))
       (kill-buffer testr-buffer-name))
   (let* ((file-name (testr-target-file-name (buffer-file-name)))
@@ -362,7 +343,7 @@ test file."
            (testr-prep-test-buffer)
            (cond ((null arg)
                   (testr-start-process
-                   (testr-spec-command test-buffer) testr-spec-options file-name)
+                   (testr-spec-command) testr-spec-options file-name)
                   (testr-insert-headers
                    testr-buffer-name
                    "= Spec File ...\n"
@@ -379,22 +360,19 @@ a toggle mapping for this file, then run the test on the toggled
 test file."
   (interactive "P")
   (bookmark-set "test")
-  (testr-take-down-test-buffer)
   (let* ((file-name (buffer-file-name))
          (default-directory (testr-find-project-top file-name)) )
     (if (not (testr-unit-file-name-p file-name))
-        (progn
-          (testr-toggle-buffer)
-          (setq file-name (buffer-file-name)) ))
+        (setq file-name (buffer-file-name)))
     (save-buffer)
     (setq testr-last-test-buffer (buffer-name))
     (let ((invoke-given (save-excursion
                           (re-search-backward testr-all-pattern)
                           (looking-at " *"))))
-        (let ((method-name (testr-find-test-method-name)))
-          (testr-invoking-test-by-name arg
-                                            file-name
-                                            (testr-fixup-method-name method-name))))))
+      (let ((method-name (testr-find-test-method-name)))
+        (testr-invoking-test-by-name arg
+                                     file-name
+                                     (testr-fixup-method-name method-name))))))
 
 (defun testr-fixup-method-name (name)
   "Add .* to method names with spaces"
@@ -430,7 +408,6 @@ a toggle mapping for this file, then run the test on the toggled
 test file."
   (interactive "P")
   (bookmark-set "test-file")
-  (testr-take-down-test-buffer)
   (if (string-equal testr-buffer-name (buffer-name))
       (kill-buffer testr-buffer-name))
   (let* ((file-name (testr-target-file-name (buffer-file-name)))
